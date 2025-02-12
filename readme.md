@@ -4,7 +4,7 @@
 
 A simple example is computing precision, recall, accuracy, and f1 scores for classification tasks. 
 
-<img src="https://storage.googleapis.com/wandb-production.appspot.com/mostafaibrahim17/images/projects/37042936/05cc4b35.png?Expires=1739383979&GoogleAccessId=gorilla-files-url-signer-man%40wandb-production.iam.gserviceaccount.com&Signature=Yk0e6lnk2a96z%2FQbGY1vCOACWFqt8pIn%2BQ26v8OTF%2FvGqPjQ7sd6AaDittWRdbUjCOOCE7LngBJiVfl8%2FqAv0IY0VIdQtuwXD0jIne8OnMzMpYlV53ZLUgt9ABiLZ0EoSjzI54IfCvTOr1h57ssDPz%2FKkT136mSWOrLJZuIXLhu1D3d8MKt2AVabNtPXdO35zfV6eZesnKm1Tj2uQH7fChUTEms0PA8MkDdYJDnivHPuNSrQLZOk1wyuhaju%2B%2BW0V1G42atFFk272qR3V0Pk6KigqvVkEeXFKreEADhgaBF5f9WO7L00VnalrPmKKOXcTsSG2XatljMNiCJ5M1lLmw%3D%3D" />
+<img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
 
 All of these can be computed with their own functions that each take two arrays holding the true and predicted class labels, but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over (and we'd even have to re-compute precision and recall to get the f1 score). Alternatively, you could compute all these metrics in the scope of a single function, but for more complex tasks, it's often desirable to isolate this kind of logic into separate functions that each have one job.
 
