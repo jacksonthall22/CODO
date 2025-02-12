@@ -35,6 +35,8 @@ All of these can be computed with their own functions that each take two arrays 
     - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that in our case represents our `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the result of operations computed earlier in the dependency tree. You can access those results by keying into `acc` with the operation's class.
     - `params`: An instance of the `MetricsParams` dataclass we defined above.
 
+    <br />
+
     ```python
     from codo import Operation
     from typing import override
