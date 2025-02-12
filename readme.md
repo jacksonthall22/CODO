@@ -64,11 +64,11 @@ print(codo(MetricsParams(y_true, y_pred)))
     ```
 
 1. 
-    Define operations by subclassing `codo.Operation`. The library defines this base class with two generic parameters that specify the input and output types for its `_call()` method, respectively (see code comments for details).
+    Define operations by subclassing `codo.Operation`. The library defines this base class with two generic parameters that specify the input and output types for its `__call__()` method, respectively (see code comments for details).
 
-    Subclasses must override the `_call()` method, and may set a list of its `dependencies` as a class variable.
+    Subclasses must override the `__call__()` method, and may set a list of its `dependencies` as a class variable.
 
-    The `_call()` method takes two parameters:
+    The `__call__()` method takes two parameters:
 
     - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that, in our case, will be the `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the results of operations computed earlier in the dependency tree. You can access those results by keying into `acc` with the operation's class.
     - `params`: An instance of the `MetricsParams` dataclass we defined above.
@@ -81,9 +81,9 @@ print(codo(MetricsParams(y_true, y_pred)))
 
 
     # When we subclass `Operation[MetricsParams, int]` below, the generics
-    # are providing a shorthand for the following signature for the `_call()` method:
+    # are providing a shorthand for the following signature for the `__call__()` method:
     #
-    #     def _call(
+    #     def __call__(
     #         self,
     #         acc: codo.Accumulator[MetricsParams], 
     #         params: MetricsParams
@@ -94,13 +94,13 @@ print(codo(MetricsParams(y_true, y_pred)))
     # and the second sets the method's return type.
     class TruePositives(Operation[MetricsParams, int]):
         @override
-        def _call(self, acc, params):
+        def __call__(self, acc, params):
             return sum(t == 1 and p == 1 for t, p in zip(true, pred))
 
 
     class FalsePositives(Operation[MetricsParams, int]):
         @override
-        def _call(self, acc, params):
+        def __call__(self, acc, params):
             return sum(t == 0 and p == 1 for t, p in zip(true, pred))
 
 
@@ -108,7 +108,7 @@ print(codo(MetricsParams(y_true, y_pred)))
         dependencies = [TruePositives, FalsePositives]
 
         @override
-        def _call(self, acc, params):
+        def __call__(self, acc, params):
             tp = acc[TruePositives]
             fp = acc[FalsePositives]
             # ^ Both resolve to `int` types here thanks to
