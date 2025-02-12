@@ -1,0 +1,6 @@
+[project]
+name = "codo"
+version = "1.0.0"
+description = "(C)ompute (O)perations in (D)ependency (O)rder"
+readme = "README.md"
+dependencies = []
