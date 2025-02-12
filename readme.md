@@ -1,18 +1,56 @@
-# `CODO`: `C`ompute `O`perations in `D`ependency `O`rder
+# `CODO`: (C)ompute (O)perations in (D)ependency (O)rder
 
-`CODO` is an easy-to-use library which abstracts the programming pattern where a set of operations (functions) with the same parameter lists must be computed over the same data, but where some of those operations might depend on other operations' outputs. 
+`CODO` is an easy-to-use library which abstracts the programming pattern where a set of operations (functions) with the same parameter lists must be computed over the same data, but some of those operations might depend on others' outputs.
 
-A simple example is computing precision, recall, accuracy, and f1 scores for classification tasks. 
+- **75** source lines of code
+- **Full type safety** thanks to `typing.Generic`
+
+A simple example is computing precision, recall, accuracy, and f1 scores for classification tasks in machine learning. 
 
 <img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
 
-All of these can be computed with their own functions that each take two arrays holding the true and predicted class labels, but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over (and we'd even have to re-compute precision and recall to get the f1 score). Alternatively, you could compute all these metrics in the scope of a single function, but for more complex tasks, it's often desirable to isolate this kind of logic into separate functions that each have one job.
+All of these *could* be computed independently, for example with four functions that each take two arrays of true and predicted class labels, but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute precision and recall to get the f1 score.
 
-`CODO` to the rescue: this library allows you to easily define these operations to isolate their logic with a simple API, automatically figure out the right order to run them, run the "shared" logic only once, and (optionally) parallelize where possible.
+Typically, you'd solve this by just computing all these metrics in the scope of a single function, but for more complex tasks, it's often desirable to isolate this kind of logic into separate functions that each have one job.
+
+`CODO` to the rescue: this library lets you to define operations to isolate logic with a simple API, automatically figures out the right order to compute them in, computes the "shared" operations only once, and (optionally) parallelizes where possible*.
+
+<sub>* Parallelization not yet implemented, PRs welcome!</sub>
 
 
-## How to use
+## Quickstart
 
+### What we'll build
+
+```python
+codo = CODO[MetricsParams](
+    [
+        Precision(),
+        Recall(),
+        Accuracy(),
+        F1Score(),
+        TruePositives(silent=True),
+        TrueNegatives(silent=True),
+        FalsePositives(silent=True),
+        FalseNegatives(silent=True),
+    ]
+)
+
+y_true = [1, 0, 1, 1, 0, 1]
+y_pred = [1, 1, 1, 0, 0, 1]
+
+print(codo(MetricsParams(y_true, y_pred)))
+'''
+{
+    <class '__main__.Precision'>: 0.75,
+    <class '__main__.Recall'>: 0.75,
+    <class '__main__.Accuracy'>: 0.6666666666666666,
+    <class '__main__.F1Score'>: 0.75
+}
+'''
+```
+
+### Let's go!
 1. 
     Define the params that each `Operation` will take. **Important:** All `Operation`s you plan to compute in the same `CODO` object must accept the same argument list. We wrap those params with a dataclass to enable full type safety. In our example, we'll define the types for the "true" and "predicted" class labels.
 
@@ -32,8 +70,9 @@ All of these can be computed with their own functions that each take two arrays 
 
     The `_call()` method takes two parameters:
 
-    - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that in our case represents our `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the result of operations computed earlier in the dependency tree. You can access those results by keying into `acc` with the operation's class.
+    - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that, in our case, will be the `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the results of operations computed earlier in the dependency tree. You can access those results by keying into `acc` with the operation's class.
     - `params`: An instance of the `MetricsParams` dataclass we defined above.
+
 
     ```python
     from codo import Operation
@@ -78,22 +117,26 @@ All of these can be computed with their own functions that each take two arrays 
     ```
 
 1. 
-    Create a `CODO` object with your `Operation`s, then call it like a function to get the outputs. 
+    Create a `CODO` object with your `Operation`s, then call it like a function to get the outputs.
 
-    You may need to define `Operation`s for intermediate steps where you don't actually care about the output—in this case, you can set `silent=True` for that operation. This includes them in the dependency graph, but discards their output in the final returned dict unless `with_silents=True`.
+    Notice that we specify the generic type in-line for the `CODO` object to get type safety on the `result` it returns, which is a `codo.Accumulator[MetricsParams]` object that has the same interface as a Python `dict`. This is where type safety gets cool, because `result[Precision]` will have type `float` and `result[TruePositives]` will have type `int`.
+
+    You may have `Operation`s for intermediate steps where you don't actually care about the output—in those cases, you can set `silent=True` to discard their outputs, unless you set `with_silents=True`.
 
     ```python
     from codo import CODO
 
-    codo = CODO([
-        Precision(),
-        TruePositives(silent=True),
-        FalsePositives(silent=True),
-    ])
+    codo = CODO[MetricsParams](
+        [
+            Precision(),
+            TruePositives(silent=True),
+            FalsePositives(silent=True),
+        ]
+    )
     # ^ Order doesn't matter in this list, Operations
     # will be computed in a valid dependency order.
 
-    codo(
+    result = codo(
         MetricsParams(
             y_true=[1, 0, 1, 1, 0, 1],
             y_pred=[1, 1, 1, 0, 0, 1]
@@ -101,18 +144,19 @@ All of these can be computed with their own functions that each take two arrays 
         # with_silents=True
     )
 
+    print(result)
     # {<class '__main__.Precision'>: 0.75}
     ```
 
-## Full example
+## Full example code
 
-The code below computes precision, recall, accuracy, and f1 scores.
+The code below computes precision, recall, accuracy, and f1 score.
 
 ```python
 from typing import override
 
 """
-Define parameter list for all Operations
+Define parameter list for Operation types
 """
 
 @dataclass
@@ -121,7 +165,7 @@ class MetricsParams:
     y_pred: list[int]
 
 """
-Define your Operations
+Define all Operation types
 """
 
 class TruePositives(Operation[MetricsParams, int]):
@@ -191,7 +235,7 @@ class F1Score(Operation[MetricsParams, float]):
 
 
 # Wrap all Operations in a CODO object. Defining the generic param type
-# in-line allows you to query into `result` below with type safety.
+# in-line allows you to query into `result` with type safety.
 # Dependency order doesn't matter in this list.
 codo = CODO[MetricsParams](
     [
