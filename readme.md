@@ -95,13 +95,13 @@ print(codo(MetricsParams(y_true, y_pred)))
     class TruePositives(Operation[MetricsParams, int]):
         @override
         def __call__(self, acc, params):
-            return sum(t == 1 and p == 1 for t, p in zip(true, pred))
+            return sum(t == 1 and p == 1 for t, p in zip(params.y_true, params.y_pred))
 
 
     class FalsePositives(Operation[MetricsParams, int]):
         @override
         def __call__(self, acc, params):
-            return sum(t == 0 and p == 1 for t, p in zip(true, pred))
+            return sum(t == 0 and p == 1 for t, p in zip(params.y_true, params.y_pred))
 
 
     class Precision(Operation[MetricsParams, float]):
@@ -151,7 +151,7 @@ print(codo(MetricsParams(y_true, y_pred)))
 
 ## Full example code
 
-The code below computes precision, recall, accuracy, and f1 score.
+The code below computes precision, recall, accuracy, and f1 score. If you'd like, try to implement it yourself with the formulas and code above as a starting point, then come back here to check your answer!
 
 ```python
 from typing import override
