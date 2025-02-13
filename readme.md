@@ -3,6 +3,7 @@
 `CODO` is an easy-to-use library which abstracts the programming pattern where a set of operations (functions) with the same parameter lists must be computed over the same data, but some of those operations might depend on others' outputs.
 
 - **75** source lines of code
+- **0** dependencies
 - **Full type safety** thanks to `typing.Generic`
 
 A simple example is computing precision, recall, accuracy, and f1 scores for classification tasks in machine learning. 
