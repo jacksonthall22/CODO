@@ -6,7 +6,7 @@
 - **0** dependencies
 - **Full type safety** thanks to `typing.Generic`
 
-A simple example is computing precision, recall, accuracy, and f1 scores for classification tasks in machine learning. 
+A simple example is computing `precision`, `recall`, `accuracy`, and `f1_score` for classification models in machine learning.
 
 <img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
 
