@@ -6,19 +6,22 @@
 - **0** dependencies
 - **Full type safety** thanks to `typing.Generic`
 
-A simple example is computing `precision`, `recall`, `accuracy`, and `f1_score` for classification models in machine learning.
+### What's the problem?
+A common example is computing `precision`, `recall`, `accuracy`, and `f1_score` for classification models in machine learning.
 
 <img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
 
-Ideally, we want to compute these
+Ideally, we want to compute these 4 metrics
 - while isolating the logic for each computation
 - without duplicating any work
 
-To isolate the logic, we *could* compute these metrics with four functions (each taking two arrays of true and predicted class labels), but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute `precision` and `recall` to get the `f1_score`.
+<sub>Of course, tons of highly optimized libraries already solve this particular task, but it's a good way to demonstrate the problem `CODO` solves.</sub>
 
-To avoid duplicating work, you'd need to compute all metrics in a single block/function, but then we lose the logic isolation. For more complex tasks, it's often desirable to make sure functions each have exactly one job.
+To isolate the logic, we could compute each metric in its own function (each taking two arrays of true and predicted class labels), but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute `precision` and `recall` to get the `f1_score`.
 
-`CODO` to the rescue:
+To avoid duplicating work, you'd need to compute all metrics in a single block/function (or awkwardly save some "global" state in a parent scope), but then we lose the pure logic isolation. For more complex tasks, it's often desirable to keep functions simple where they have exactly one job.
+
+### `CODO` to the rescue!
 - Define your operations with its simple API
 - Specify their dependencies—other operations—to guarantee that their results will be accessable during its own computation (avoiding duplicate work)
 - The library does the heavy lifting to automatically determine a valid computation graph and parallelize work wherever possible!*
