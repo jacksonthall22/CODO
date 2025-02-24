@@ -17,9 +17,9 @@ Ideally, we want to compute these 4 metrics
 
 <sub>Of course, tons of highly optimized libraries already solve this particular task, but it's a good way to demonstrate the problem `CODO` solves.</sub>
 
-To isolate the logic, we could compute each metric in its own function (each taking two arrays of true and predicted class labels), but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute `precision` and `recall` to get the `f1_score`.
+To **isolate the logic**, we could compute each metric in its own function (each taking two arrays of true and predicted class labels), but then we'd be computing `TN`, `FN`, `FP`, and `FN` **multiple times over**, and we'd even have to re-compute `precision` and `recall` to get the `f1_score`.
 
-To avoid duplicating work, you'd need to compute all metrics in a single block/function (or awkwardly save some "global" state in a parent scope), but then we lose the pure logic isolation. For more complex tasks, it's often desirable to keep functions simple where they have exactly one job.
+To **avoid duplicating work**, we'd need to compute all metrics in a single block/function (or awkwardly save some "global" state in a parent scope), but then **we lose the pure logic isolation**. For more complex tasks, it's often desirable to keep functions simple where they have exactly one job.
 
 ### `CODO` to the rescue!
 - Define your operations with its simple API
