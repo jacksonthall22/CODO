@@ -10,11 +10,18 @@ A simple example is computing precision, recall, accuracy, and f1 scores for cla
 
 <img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
 
-All of these *could* be computed independently, for example with four functions that each take two arrays of true and predicted class labels, but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute precision and recall to get the f1 score.
+Ideally, we want to compute these
+- while isolating the logic for each computation
+- without duplicating any work
 
-Typically, you'd solve this by just computing all these metrics in the scope of a single function, but for more complex tasks, it's often desirable to isolate this kind of logic into separate functions that each have one job.
+To isolate the logic, we *could* compute these metrics with four functions (each taking two arrays of true and predicted class labels), but then we'd be computing `TN`, `FN`, `FP`, and `FN` multiple times over, and we'd even have to re-compute `precision` and `recall` to get the `f1_score`.
 
-`CODO` to the rescue: this library lets you to define operations to isolate logic with a simple API, automatically figures out the right order to compute them in, computes the "shared" operations only once, and (optionally) parallelizes where possible*.
+To avoid duplicating work, you'd need to compute all metrics in a single block/function, but then we lose the logic isolation. For more complex tasks, it's often desirable to make sure functions each have exactly one job.
+
+`CODO` to the rescue:
+- Define your operations with its simple API
+- Specify their dependencies—other operations—to guarantee that their results will be accessable during its own computation (avoiding duplicate work)
+The library does the heavy lifting to automatically determine a valid computation graph and parallelize work wherever possible*.
 
 <sub>* Parallelization not yet implemented, PRs welcome!</sub>
 
@@ -271,3 +278,7 @@ print(result)
 }
 '''
 ```
+
+## Future work / `TODO`s
+- [ ] Implement parallelize based on the dependency graph
+- [ ] Visualize dependency graphs with `matplotlib` or `graphviz`
