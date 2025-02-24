@@ -21,7 +21,7 @@ To avoid duplicating work, you'd need to compute all metrics in a single block/f
 `CODO` to the rescue:
 - Define your operations with its simple API
 - Specify their dependencies—other operations—to guarantee that their results will be accessable during its own computation (avoiding duplicate work)
-The library does the heavy lifting to automatically determine a valid computation graph and parallelize work wherever possible*.
+- The library does the heavy lifting to automatically determine a valid computation graph and parallelize work wherever possible!*
 
 <sub>* Parallelization not yet implemented, PRs welcome!</sub>
 
