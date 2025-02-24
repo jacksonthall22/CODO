@@ -7,11 +7,11 @@
 - **Full type safety** thanks to `typing.Generic`
 
 ### What's the problem?
-A common task is computing `precision`, `recall`, `accuracy`, and `f1_score` for classification models in machine learning.
+A common task* is computing `precision`, `recall`, `accuracy`, and `f1_score` for classification models in machine learning.
+
+<sub>* Of course, tons of highly optimized libraries already solve this particular task, but it's a good way to demonstrate the problem `CODO` solves.</sub>
 
 <img src="https://api.wandb.ai/files/mostafaibrahim17/images/projects/37042936/05cc4b35.png" />
-
-<sub>Of course, tons of highly optimized libraries already solve this particular task, but it's a good way to demonstrate the problem `CODO` solves.</sub>
 
 Ideally, we want to compute these 4 metrics
 - while isolating the logic for each computation
