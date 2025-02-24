@@ -77,7 +77,7 @@ print(codo(MetricsParams(y_true, y_pred)))
 1. 
     Define operations by subclassing `codo.Operation`. The library defines this base class with two generic parameters that specify the input and output types for its `__call__()` method, respectively (see code comments for details).
 
-    Subclasses must override the `__call__()` method, and may set a list of its `dependencies` as a class variable.
+    Subclasses **must** override the `__call__()` method, and **may** set a list of its `dependencies` as a class variable.
 
     The `__call__()` method takes two parameters:
 
