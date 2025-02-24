@@ -36,14 +36,14 @@ To **avoid duplicating work**, we'd need to compute all metrics in a single bloc
 ```python
 codo = CODO[MetricsParams](
     [
-        Precision(),
-        Recall(),
-        Accuracy(),
-        F1Score(),
         TruePositives(silent=True),
         TrueNegatives(silent=True),
         FalsePositives(silent=True),
         FalseNegatives(silent=True),
+        Precision(),
+        Recall(),
+        Accuracy(),
+        F1Score(),
     ]
 )
 
