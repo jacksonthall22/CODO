@@ -81,7 +81,7 @@ print(codo(MetricsParams(y_true, y_pred)))
 
     The `__call__()` method takes two parameters:
 
-    - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that, in our case, will be the `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the results of operations computed earlier in the dependency tree. You can access those results by keying into `acc` with the operation's class.
+    - `acc`: A `codo.Accumulator[ParamsT]` object, where `ParamsT` is a generic variable that, in our case, will be the `MetricsParams` dataclass. Essentially this is a glorified `dict` providing full type safety that stores the results of operations computed earlier in the dependency graph. You can access those results by keying into `acc` with the operation's class.
     - `params`: An instance of the `MetricsParams` dataclass we defined above.
 
     <br />
