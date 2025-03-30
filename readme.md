@@ -131,9 +131,9 @@ print(codo(MetricsParams(y_true, y_pred)))
 1. 
     Create a `CODO` object with your `Operation`s, then call it like a function to get the outputs.
 
-    Notice that we specify the generic type in-line for the `CODO` object to get type safety on the `result` it returns, which is a `codo.Accumulator[MetricsParams]` object that has the same interface as a Python `dict`. This is where type safety gets cool, because `result[Precision]` will have type `float` and `result[TruePositives]` will have type `int`.
+    Notice that we specify the generic type in-line for the `CODO` object to get type safety on the `result` it returns, which is the same `codo.Accumulator[MetricsParams]` object. This is where type safety gets cool, because `result[Precision]` will have type `float` and `result[TruePositives]` will have type `int`.
 
-    You may have `Operation`s for intermediate steps where you don't actually care about the output—in those cases, you can set `silent=True` to discard their outputs, unless you set `with_silents=True`.
+    You may have `Operation`s for intermediate steps that you don't actually care about in the final output—in those cases, you can set `silent=True` to discard their outputs as soon as the computation graph no longer relies on them.
 
     ```python
     from codo import CODO
