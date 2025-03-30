@@ -285,3 +285,4 @@ print(result)
 ## Future work / `TODO`s
 - [ ] Implement parallelize based on the dependency graph
 - [ ] Visualize dependency graphs with `matplotlib` or `graphviz`
+- [ ] Eagerly discard `Operation`s with `silent=True` set as soon as no future `Operation` in the graph relies on it, instead of discarding after all computations
